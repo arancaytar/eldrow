@@ -22,6 +22,7 @@ export function Keyboard(props: KeyboardProps) {
             }
             return (
               <div
+                id={`Game-keyboard-button-${label}`}
                 tabIndex={-1}
                 key={j}
                 role="button"

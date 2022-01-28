@@ -5,6 +5,7 @@ import targetList from "./targets.json";
 import {Clue, clueAnswer, clueFilter} from "./clue";
 import {Row, RowState} from "./Row";
 import {optimize} from "./optimize";
+import {ordinal} from "./util";
 
 enum GameState {
   Guessing,
@@ -17,7 +18,7 @@ const targets = targetList.slice(0, targetList.indexOf("murky") + 1); // Words n
 const minWordLength = 4;
 const maxWordLength = 11;
 
-function fastOptimize(guesses: string[], answers: Clue[][]): string {
+async function fastOptimize(guesses: string[], answers: Clue[][]): Promise<string> {
   if (guesses.length === 0) return lookup[""];
   if (guesses.length === 1 && answers.length === 1 && guesses[0].toLowerCase() === lookup[""]) {
     const answer = answers[0].map((clue: Clue) => {
@@ -98,32 +99,28 @@ function Game() {
     else if (gameState === GameState.Responding) {
       if (/^[2g]$/i.test(key)) {
         setCurrentAnswer((answer : Clue[]) => answer.concat(Clue.Correct).slice(0, wordLength));
-        setHint(`Answer is length ${currentAnswer.length}`);
       } else if (/^[1y]$/i.test(key)) {
         setCurrentAnswer((answer : Clue[]) => answer.concat(Clue.Elsewhere).slice(0, wordLength));
-        setHint(`Answer is length ${currentAnswer.length}`);
       } else if (/^[0bw]$/i.test(key)) {
         setCurrentAnswer((answer : Clue[]) => answer.concat(Clue.Absent).slice(0, wordLength));
-        setHint(`Answer is length ${currentAnswer.length}`);
       } else if (key === "Backspace") {
         setCurrentAnswer((answer : Clue[]) => answer.slice(0, -1));
-        setHint(`Answer is length ${currentAnswer.length}`);
       } else if (key === "Enter") {
         if (currentAnswer.length !== wordLength) {
           setHint(`Too short: ${currentAnswer}`);
           return;
         }
-        const solutions = getSolutions(guesses.concat([currentGuess]), answers.concat([currentAnswer]));
-        if (solutions.length === 0) {
-          setHint(`No solutions found; check answers.`);
-          return;
-        }
-        console.log(currentAnswer.filter(clue => clue !== Clue.Correct).length);
+        const solutions = getSolutions(guesses, answers.concat([currentAnswer]));
         if (currentAnswer.filter(clue => clue !== Clue.Correct).length === 0) {
           setHint(`Finished after ${guesses.length} guesses. Press enter to restart.`);
           setGameState(GameState.Finished);
           return;
         }
+        if (solutions.length === 0) {
+          setHint(`No solutions found; check answers.`);
+          return;
+        }
+        setHint(`${solutions.slice(0, 3).join(', ')} and ${Math.max(0, solutions.length - 3)} others remaining. `);
         setAnswers((answers) => answers.concat([currentAnswer]));
         setCurrentAnswer((answer : Clue[]) => []);
         setGameState(GameState.AutoGuessing);
@@ -149,23 +146,24 @@ function Game() {
 
   if (gameState === GameState.AutoGuessing)
   {
-    console.log("Guessing automatically")
-    setGameState(GameState.Responding);
-    setHint("Guessed?");
-    setGuesses((guesses) => guesses.concat([fastOptimize(guesses, answers)]));
+    const time = (new Date()).getTime();
+    fastOptimize(guesses, answers)
+      .then((guess: string) => {
+        setGuesses(guesses.concat([guess]));
+        setGameState(GameState.Responding);
+        setHint(`Generated ${ordinal(guesses.length + 1)} guess in ${(((new Date()).getTime() - time)/1000).toPrecision(2)} seconds.`);
+      })
   }
 
   const onReset = (i: number, target: GameState) => {
     // :eave last guess if we only reset the answer:
     setGuesses(guesses => guesses.slice(0, i + +(target === GameState.Responding)));
     setAnswers(answers => answers.slice(0, i));
-    console.log(`Resetting to ${guesses}, ${answers}`);
     setCurrentGuess("");
     setCurrentAnswer([]);
     setGameState(target);
   }
 
-  console.log(`${guesses.length} guesses, redrawing.`);
   const tableRows = Array(guesses.length + +(gameState === GameState.Guessing))
     .fill(undefined)
     .map((_, i) => {
