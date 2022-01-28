@@ -209,31 +209,6 @@ a:active {
   overflow: hidden;
 }
 
-.Settings {
-  text-align: left;
-  font-size: 18px;
-}
-
-.Settings-setting {
-  margin: 8px;
-  display: flex;
-  align-items: top;
-}
-
-.Settings-setting input {
-  width: 18px;
-  height: 18px;
-}
-
-.Settings-setting input[type=range] {
-  width: 50px;
-  height: 18px;
-}
-
-.Settings-setting label {
-  margin-inline-start: 8px;
-}
-
 .top-right {
   position: absolute;
   top: 5px;
