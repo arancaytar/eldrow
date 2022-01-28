@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/eldrow/static/css/main.36d70f64.css",
-    "main.js": "/eldrow/static/js/main.02b828a3.js",
+    "main.css": "/eldrow/static/css/main.5489791a.css",
+    "main.js": "/eldrow/static/js/main.930eccb6.js",
     "static/js/787.1bf85b45.chunk.js": "/eldrow/static/js/787.1bf85b45.chunk.js",
     "index.html": "/eldrow/index.html",
-    "main.36d70f64.css.map": "/eldrow/static/css/main.36d70f64.css.map",
-    "main.02b828a3.js.map": "/eldrow/static/js/main.02b828a3.js.map",
+    "main.5489791a.css.map": "/eldrow/static/css/main.5489791a.css.map",
+    "main.930eccb6.js.map": "/eldrow/static/js/main.930eccb6.js.map",
     "787.1bf85b45.chunk.js.map": "/eldrow/static/js/787.1bf85b45.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.36d70f64.css",
-    "static/js/main.02b828a3.js"
+    "static/css/main.5489791a.css",
+    "static/js/main.930eccb6.js"
   ]
 }
