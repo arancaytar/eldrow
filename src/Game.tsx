@@ -120,11 +120,10 @@ function Game() {
           setHint(`No solutions found; check answers.`);
           return;
         }
-        setHint(`${solutions.slice(0, 3).join(', ')} and ${Math.max(0, solutions.length - 3)} others remaining. `);
+        setHint(`${solutions.slice(0, 3).map(s => s.toUpperCase()).join(', ')} and ${Math.max(0, solutions.length - 3)} others remaining. `);
         setAnswers((answers) => answers.concat([currentAnswer]));
         setCurrentAnswer((answer : Clue[]) => []);
         setGameState(GameState.AutoGuessing);
-        setHint("Guessing...");
       }
     }
   };
@@ -144,16 +143,17 @@ function Game() {
     };
   }, [currentGuess, currentAnswer, gameState]);
 
-  if (gameState === GameState.AutoGuessing)
-  {
-    const time = (new Date()).getTime();
-    fastOptimize(guesses, answers)
-      .then((guess: string) => {
-        setGuesses(guesses.concat([guess]));
-        setGameState(GameState.Responding);
-        setHint(`Generated ${ordinal(guesses.length + 1)} guess in ${(((new Date()).getTime() - time)/1000).toPrecision(2)} seconds.`);
-      })
-  }
+  useEffect(() => {
+    if (gameState === GameState.AutoGuessing) {
+      const time = (new Date()).getTime();
+      fastOptimize(guesses, answers)
+        .then((guess: string) => {
+          setGuesses(guesses.concat([guess]));
+          setGameState(GameState.Responding);
+          setHint(hint => hint + ` Generated ${ordinal(guesses.length + 1)} guess in ${(((new Date()).getTime() - time) / 1000).toPrecision(2)} seconds.`);
+        });
+    }
+  }, [guesses, answers, gameState]);
 
   const onReset = (i: number, target: GameState) => {
     // :eave last guess if we only reset the answer:

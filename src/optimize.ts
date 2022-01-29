@@ -3,7 +3,7 @@ import {sample} from "./util";
 import {Clue, clue} from "./clue";
 import lookup from "./lookup.json";
 
-const limit = 10000;
+const limit = 10000000;
 
 function entropy(guess: string, solutions: string[]) {
   const bins = Array(Math.pow(3, guess.length)).fill(0);
@@ -35,7 +35,7 @@ function entropy(guess: string, solutions: string[]) {
 export function optimize(solutions: string[]): string {
   console.log("Random optimization");
   const dict = dictionary.filter((word) => word.length === solutions[0].length);
-  const sampleSize = Math.min(dict.length, Math.floor(limit / solutions.length));
+  const sampleSize = Math.min(dict.length, Math.floor(Math.sqrt(limit / solutions.length)));
   let bestWord = "";
   let bestValue = 0;
   console.log(`Sampling 1e6/${solutions.length} = ${sampleSize} guesses`);
