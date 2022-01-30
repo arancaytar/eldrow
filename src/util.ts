@@ -9,8 +9,8 @@ export function speak(
   text: string,
   priority: "polite" | "assertive" = "assertive"
 ) {
-  var el = document.createElement("div");
-  var id = "speak-" + Date.now();
+  const el = document.createElement("div");
+  const id = "speak-" + Date.now();
   el.setAttribute("id", id);
   el.setAttribute("aria-live", priority || "polite");
   el.classList.add("sr-only");
@@ -26,7 +26,7 @@ export function speak(
 }
 
 export function ordinal(n: number): string {
-  return n + ([, "st", "nd", "rd"][(n % 100 >> 3) ^ 1 && n % 10] || "th");
+  return n + ([undefined, "st", "nd", "rd"][(n % 100 >> 3) ^ 1 && n % 10] || "th");
 }
 
 export function shuffle(arr: string[]) {

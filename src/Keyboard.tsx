@@ -1,4 +1,4 @@
-import {Clue, clueClass} from "./clue";
+import {clueClass} from "./clue";
 
 interface KeyboardProps {
   onKey: (key: string) => void;

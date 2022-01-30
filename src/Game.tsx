@@ -92,7 +92,7 @@ function Game() {
           return;
         }
         setGuesses((guesses) => guesses.concat([currentGuess]));
-        setCurrentGuess((guess : string) => "");
+        setCurrentGuess("");
         setGameState(GameState.Responding)
       }
     }
@@ -122,7 +122,7 @@ function Game() {
         }
         setHint(`${solutions.slice(0, 3).map(s => s.toUpperCase()).join(', ')} and ${Math.max(0, solutions.length - 3)} others remaining. `);
         setAnswers((answers) => answers.concat([currentAnswer]));
-        setCurrentAnswer((answer : Clue[]) => []);
+        setCurrentAnswer([]);
         setGameState(GameState.AutoGuessing);
       }
     }

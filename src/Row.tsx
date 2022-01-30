@@ -1,5 +1,4 @@
 import { Clue, clueClass, CluedLetter, clueWord } from "./clue";
-import {useRef, useState} from "react";
 
 export enum RowState {
   LockedIn,
